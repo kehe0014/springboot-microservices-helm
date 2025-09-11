@@ -1,0 +1,53 @@
+# Compiled class files
+target/
+build/
+
+# Ignore Gradle specific files
+.gradle/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# IDE specific files
+.classpath
+.project
+.settings/
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+*.launch
+
+# Eclipse
+.apt_generated/
+.factorypath
+.springBeans
+.sts4-cache/
+
+# VS Code
+.vscode/
+
+# Package files
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Log files
+*.log
+logs/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Maven wrapper
+.mvn/wrapper/maven-wrapper.jar
+.mvn/
+!/.mvn/wrapper/maven-wrapper.jar
+!/target/
+*.sh

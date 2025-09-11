@@ -1,8 +1,8 @@
 replicaCount: 2
 
 image:
-  repository: registry.company.com/gateway-service
-  tag: latest
+  repository: tdksoft341/api-gateway
+  tag: ""
   pullPolicy: IfNotPresent
 
 spring:

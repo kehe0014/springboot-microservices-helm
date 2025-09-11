@@ -1,17 +1,9 @@
-# Default values for user-service.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
-# This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
 replicaCount: 1
-
-# This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
 image:
-  repository: nginx
-  # This sets the pull policy for images.
+  repository: tdk3410/user-service
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: "latest"
 
 # This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 imagePullSecrets: []
@@ -54,7 +46,7 @@ service:
   # This sets the service type more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
   type: ClusterIP
   # This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
-  port: 80
+  port: 8081
 
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
@@ -121,3 +113,14 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+# PostgreSQL Dependency configuration
+postgresql:
+  enabled: true
+  auth:
+    username: myuser
+    password: mypassword
+    database: mydatabase
+  primary:
+    service:
+      type: ClusterIP # ou NodePort si nécessaire

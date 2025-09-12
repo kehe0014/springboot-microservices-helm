@@ -1,0 +1,61 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitops-bootstrap
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/kehe0014/springboot-microservices-helm.git'
+    targetRevision: main
+    path: helm-charts/environments/prod
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+
+  # App of Apps: références des microservices
+  sources:
+    - path: ../../charts/api-gateway
+      targetRevision: main
+      helm:
+        valueFiles:
+          - ../../environments/prod/api-gateway-values.yaml
+      destination:
+        server: https://<EKS_CLUSTER_API_ENDPOINT>
+        namespace: api-gateway
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+
+    - path: ../../charts/user-service
+      targetRevision: main
+      helm:
+        valueFiles:
+          - ../../environments/prod/user-service-values.yaml
+      destination:
+        server: https://<EKS_CLUSTER_API_ENDPOINT>
+        namespace: user-service
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+
+    - path: ../../charts/product-service
+      targetRevision: main
+      helm:
+        valueFiles:
+          - ../../environments/prod/product-service-values.yaml
+      destination:
+        server: https://<EKS_CLUSTER_API_ENDPOINT>
+        namespace: product-service
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true

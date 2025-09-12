@@ -1,0 +1,88 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: staging-apps
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/kehe0014/springboot-microservices-gitops.git'
+    targetRevision: main
+    path: helm-charts/environments/staging
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: staging
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: api-gateway-staging
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/monorg/monorepo'
+    targetRevision: main
+    path: helm-charts/charts/api-gateway
+    helm:
+      valueFiles:
+        - ../../environments/staging/api-gateway-values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: api-gateway
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: user-service-staging
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/kehe0014/springboot-microservices-gitops.git'
+    targetRevision: main
+    path: helm-charts/charts/user-service
+    helm:
+      valueFiles:
+        - ../../environments/staging/user-service-values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: user-service
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: product-service-staging
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/kehe0014/springboot-microservices-gitops.git'
+    targetRevision: main
+    path: helm-charts/charts/product-service
+    helm:
+      valueFiles:
+        - ../../environments/staging/product-service-values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: product-service
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

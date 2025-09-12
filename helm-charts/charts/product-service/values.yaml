@@ -1,0 +1,39 @@
+replicaCount: 2
+
+image:
+  repository: ghcr.io/kehe0014/springboot-microservices-helm/product-service
+  tag: latest
+  pullPolicy: IfNotPresent
+
+resources:
+  limits:
+    memory: 512Mi
+    cpu: 500m
+  requests:
+    memory: 256Mi
+    cpu: 200m
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: false # Ingress should be managed by the API Gateway
+
+mongodb:
+  enabled: true # Enable the MongoDB sub-chart by default for the service to function
+  replicaCount: 1 # Default to a single replica
+  architecture: standalone
+  auth:
+    rootUser: root
+    rootPassword: changeme # Placeholder, to be overridden
+
+serviceAccount:
+  create: true
+  automount: true

@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: product-service-staging
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/kehe0014/springboot-microservices-helm.git'
+    targetRevision: main
+    path: helm-charts/charts/product-service
+    helm:
+      valueFiles:
+        - ../../environments/staging/product-service-values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: product-service
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

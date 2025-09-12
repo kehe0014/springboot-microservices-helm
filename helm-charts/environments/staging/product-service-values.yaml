@@ -1,0 +1,3 @@
+mongodb:
+  auth:
+    rootPassword: <your-staging-mongodb-password>

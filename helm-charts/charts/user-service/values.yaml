@@ -1,0 +1,41 @@
+replicaCount: 2
+
+image:
+  repository: ghcr.io/kehe0014/springboot-microservices-helm/user-service
+  tag: latest
+  pullPolicy: IfNotPresent
+
+resources:
+  limits:
+    memory: 512Mi
+    cpu: 500m
+  requests:
+    memory: 256Mi
+    cpu: 200m
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: false # Ingress should be managed by the API Gateway
+
+postgresql:
+  enabled: true # Enable the PostgreSQL sub-chart by default
+  primary:
+    persistence:
+      enabled: false # Use ephemeral storage for default dev/test environments
+  auth:
+    username: user
+    password: changeme # Placeholder, to be overridden
+    database: users
+
+serviceAccount:
+  create: true
+  automount: true

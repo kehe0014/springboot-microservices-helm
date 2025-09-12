@@ -1,0 +1,9 @@
+spring:
+  profile: staging
+
+ingress:
+  hosts:
+    - host: staging-api.company.com
+      paths:
+        - path: /
+          pathType: Prefix

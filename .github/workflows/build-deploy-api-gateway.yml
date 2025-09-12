@@ -1,0 +1,40 @@
+name: Build & Deploy API Gateway
+
+on:
+  push:
+    paths:
+      - "services/api-gateway/**"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+        
+      # - name: Log in to DockerHub
+        # uses: docker/login-action@v2
+        # with:
+         # username: ${{ secrets.DOCKERHUB_USERNAME }}
+         # password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build & Push image
+        run: |
+          IMAGE=ghcr.io/${{ github.repository }}/api-gateway
+          TAG=${GITHUB_SHA::7}
+          docker build -t $IMAGE:$TAG ./services/api-gateway
+          docker push $IMAGE:$TAG
+          echo "IMAGE=$IMAGE" >> $GITHUB_ENV
+          echo "TAG=$TAG" >> $GITHUB_ENV
+
+      - name: Update GitOps values
+        run: |
+          sed -i "s|tag: .*|tag: \"${TAG}\"|" gitops/environments/staging/api-gateway-values.yaml
+          sed -i "s|repository: .*|repository: \"${IMAGE}\"|" gitops/environments/staging/api-gateway-values.yaml
+
+      - name: Commit & Push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore(gitops): update api-gateway image ${{ env.TAG }}"
+          file_pattern: gitops/environments/staging/api-gateway-values.yaml

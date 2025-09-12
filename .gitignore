@@ -37,6 +37,9 @@ build/
 *.tar.gz
 *.rar
 
+.env
+.env.local
+
 # Log files
 *.log
 logs/

@@ -1,7 +1,7 @@
 replicaCount: 2
 
 image:
-  repository: ghcr.io/kehe0014/springboot-microservices-helm/user-service
+  repository: tdksoft341/user-service
   tag: latest
   pullPolicy: IfNotPresent
 

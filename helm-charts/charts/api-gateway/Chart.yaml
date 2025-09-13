@@ -1,6 +1,6 @@
 apiVersion: v2
 name: api-gateway
-description:  Spring Cloud Gateway Service
+description: Spring Boot Gateway Service
 type: application
 version: 1.0.0
 appVersion: "1.0.0"

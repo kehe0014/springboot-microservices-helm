@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: user-service-staging
+  name: product-service-staging
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -10,14 +10,19 @@ spec:
   source:
     repoURL: https://github.com/kehe0014/springboot-microservices-helm.git
     targetRevision: HEAD
-    path: helm-charts/charts/user-service
+    path: helm-charts/charts/product-service
     helm:
       valueFiles:
         - values.yaml
+      # Optional: If you need to override values for staging
+      # values: |
+      #   replicaCount: 2
+      #   image:
+      #     tag: staging-latest
   
   destination:
     server: https://kubernetes.default.svc
-    namespace: user-service
+    namespace: product-service
   
   syncPolicy:
     automated:
@@ -29,4 +34,4 @@ spec:
   
   info:
     - name: Description
-      value: User Service Microservice for Staging Environment
+      value: Product Service Microservice for Staging Environment

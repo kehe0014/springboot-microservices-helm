@@ -1,35 +1,12 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: staging-apps
-  namespace: argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
-spec:
-  project: default
-  source:
-    repoURL: 'https://github.com/kehe0014/springboot-microservices-gitops.git'
-    targetRevision: main
-    path: helm-charts/environments/staging
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: staging
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
----
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
   name: api-gateway-staging
   namespace: argocd
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/monorg/monorepo'
+    repoURL: 'https://github.com/kehe0014/springboot-microservices-helm.git'
     targetRevision: main
     path: helm-charts/charts/api-gateway
     helm:
@@ -51,7 +28,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/kehe0014/springboot-microservices-gitops.git'
+    repoURL: 'https://github.com/kehe0014/springboot-microservices-helm.git'
     targetRevision: main
     path: helm-charts/charts/user-service
     helm:
@@ -73,7 +50,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/kehe0014/springboot-microservices-gitops.git'
+    repoURL: 'https://github.com/kehe0014/springboot-microservices-helm.git'
     targetRevision: main
     path: helm-charts/charts/product-service
     helm:
@@ -86,3 +63,4 @@ spec:
     automated:
       prune: true
       selfHeal: true
+      

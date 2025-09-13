@@ -2,8 +2,8 @@
 replicaCount: 2
 
 image:
-  repository: ghcr.io/kehe0014/springboot-microservices-helm/api-gateway
-  tag: "92f0867"
+  repository: tdksoft341/api-gateway
+  tag: "latest"
   pullPolicy: IfNotPresent
 
 spring:

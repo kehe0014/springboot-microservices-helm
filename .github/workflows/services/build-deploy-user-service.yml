@@ -1,0 +1,20 @@
+name: Build and Deploy User Service
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'services/user-service/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'services/user-service/**'
+
+jobs:
+  call-reusable-workflow:
+    uses: ./.github/workflows/base-build-deploy.yml
+    with:
+      service_name: 'user-service'
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}

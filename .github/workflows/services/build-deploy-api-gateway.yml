@@ -1,0 +1,20 @@
+name: Build and Deploy Api Gateway Service
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'services/api-gateway/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'services/api-gateway/**'
+
+jobs:
+  call-reusable-workflow:
+    uses: ./.github/workflows/base-build-deploy.yml
+    with:
+      service_name: 'api-gateway'
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}

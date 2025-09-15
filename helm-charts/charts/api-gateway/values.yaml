@@ -7,7 +7,7 @@ image:
   pullPolicy: IfNotPresent
 
 spring:
-  profile: default  # A neutral profile for base configuration
+  profile: default
   cloud:
     gateway:
       routes:
@@ -33,6 +33,7 @@ autoscaling:
   minReplicas: 2
   maxReplicas: 10
   targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 70
 
 service:
   type: ClusterIP
@@ -42,7 +43,6 @@ ingress:
   enabled: true
   className: "nginx"
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/cors-allow-methods: "GET, PUT, POST, DELETE, PATCH, OPTIONS"

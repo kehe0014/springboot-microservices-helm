@@ -11,16 +11,4 @@ public class ApiGatewayApplication {
     public static void main(String[] args) {
         SpringApplication.run(ApiGatewayApplication.class, args);
     }
-
-    @Bean
-    public RouteLocator customRouteLocator(RouteLocatorBuilder builder) {
-        return builder.routes()
-                .route("user_service", r -> r
-                        .path("/api/users/**")
-                        .uri("http://user-service:8081"))
-                .route("product_service", r -> r
-                        .path("/api/products/**")
-                        .uri("http://product-service:8082"))
-                .build();
-    }
 }

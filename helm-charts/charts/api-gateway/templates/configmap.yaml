@@ -1,0 +1,62 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "api-gateway.fullname" . }}-config
+  labels:
+    {{- include "api-gateway.labels" . | nindent 4 }}
+data:
+  application.yaml: |-
+    server:
+      port: 8080
+
+    spring:
+      application:
+        name: api-gateway
+      cloud:
+        gateway:
+          discovery:
+            locator:
+              enabled: true
+              lower-case-service-id: true
+          routes:
+            - id: user_service
+              uri: lb://user-service
+              predicates:
+                - Path=/api/users/**
+              filters:
+                - StripPrefix=1
+                - name: CircuitBreaker
+                  args:
+                    name: user-service-circuit
+                    fallbackUri: forward:/fallback/user
+            - id: product_service
+              uri: lb://product-service
+              predicates:
+                - Path=/api/products/**
+              filters:
+                - StripPrefix=1
+                - name: CircuitBreaker
+                  args:
+                    name: product-service-circuit
+                    fallbackUri: forward:/fallback/product
+
+          default-filters:
+            - DedupeResponseHeaders=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+            - RemoveResponseHeader=X-Powered-By
+            - AddResponseHeader=X-Response-From, Spring-Cloud-Gateway
+
+    management:
+      endpoints:
+        web:
+          exposure:
+            include: health, info, prometheus
+      endpoint:
+        health:
+          show-details: always
+
+    springdoc:
+      api-docs:
+        enabled: true
+      swagger-ui:
+        enabled: true
+        path: /swagger-ui.html

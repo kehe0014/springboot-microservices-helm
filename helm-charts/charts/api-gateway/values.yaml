@@ -40,18 +40,13 @@ service:
 
 ingress:
   enabled: true
-  className: "nginx"
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/enable-cors: "true"
+  className: nginx
   hosts:
-    - host: "tdk.domain.com"
+    - host: gateway.company.com # A placeholder or neutral host
       paths:
         - path: /
           pathType: Prefix
-        - path: /api
-          pathType: Prefix
+  tls: []
 
 postgresql:
   enabled: false

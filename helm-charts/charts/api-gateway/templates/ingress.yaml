@@ -2,13 +2,21 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "api-gateway.fullname" . }}
+  name: {{ include "api-gateway.fullname" . }}-ingress
   labels:
     {{- include "api-gateway.labels" . | nindent 4 }}
-  {{- with .Values.ingress.annotations }}
   annotations:
+    {{- with .Values.ingress.annotations }}
     {{- toYaml . | nindent 4 }}
-  {{- end }}
+    {{- end }}
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, PUT, POST, DELETE, PATCH, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/configuration-snippet: |
+      more_set_headers "X-Response-From: Spring-Cloud-Gateway";
+      more_set_headers "Access-Control-Allow-Origin: *";
 spec:
   {{- with .Values.ingress.className }}
   ingressClassName: {{ . }}
@@ -40,4 +48,22 @@ spec:
                   number: {{ $.Values.service.port }}
           {{- end }}
     {{- end }}
+    # Règle supplémentaire pour le host existant tdk.domain.com
+    - host: "tdk.domain.com"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "api-gateway.fullname" . }}
+                port:
+                  number: {{ .Values.service.port }}
+          - path: /api
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "api-gateway.fullname" . }}
+                port:
+                  number: {{ .Values.service.port }}
 {{- end }}
